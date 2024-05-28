@@ -3,63 +3,43 @@ package org.disguys.brainfuckbackend.service;
 import java.util.List;
 
 public class BrainfuckInterpreter {
-    private static final int MEMORY_SIZE = 30000;
+    private final List<Object> ast;
+    private final byte[] memory;
+    private int pointer;
+    private StringBuilder output;
     private String input;
     private int inputPointer;
-    private StringBuilder output;
 
-    public BrainfuckInterpreter(String input) {
+    public BrainfuckInterpreter(List<Object> ast, String input) {
+        this.ast = ast;
+        this.memory = new byte[30000];
+        this.pointer = 0;
+        this.output = new StringBuilder();
         this.input = input;
         this.inputPointer = 0;
-        this.output = new StringBuilder();
     }
 
-    public String interpret(BrainfuckParser.ASTNode root) {
-        byte[] memory = new byte[MEMORY_SIZE];
-        int pointer = 0;
-        interpretNode(root, memory, pointer);
+    public String run() {
+        execute(ast);
         return output.toString();
     }
 
-    private void interpretNode(BrainfuckParser.ASTNode node, byte[] memory, int pointer) {
-        for (BrainfuckParser.ASTNode child : node.children) {
-            switch (child.token) {
-                case INCREMENT_POINTER:
-                    pointer++;
-                    if (pointer >= MEMORY_SIZE) {
-                        pointer = 0;
-                    }
-                    break;
-                case DECREMENT_POINTER:
-                    pointer--;
-                    if (pointer < 0) {
-                        pointer = MEMORY_SIZE - 1;
-                    }
-                    break;
-                case INCREMENT_DATA:
-                    memory[pointer]++;
-                    break;
-                case DECREMENT_DATA:
-                    memory[pointer]--;
-                    break;
-                case OUTPUT:
-                    output.append((char) memory[pointer]);
-                    break;
-                case INPUT:
-                    if (inputPointer < input.length()) {
-                        memory[pointer] = (byte) input.charAt(inputPointer);
-                        inputPointer++;
-                    } else {
-                        memory[pointer] = 0;
-                    }
-                    break;
-                case LOOP_START:
-                    while (memory[pointer] != 0) {
-                        interpretNode(child, memory, pointer);
-                    }
-                    break;
-                case LOOP_END:
-                    throw new IllegalStateException("Unmatched closing bracket");
+    private void execute(List<Object> instructions) {
+        for (Object instruction : instructions) {
+            if (instruction instanceof Character) {
+                char instr = (char) instruction;
+                switch (instr) {
+                    case '>' -> pointer++;
+                    case '<' -> pointer--;
+                    case '+' -> memory[pointer]++;
+                    case '-' -> memory[pointer]--;
+                    case '.' -> output.append((char) (memory[pointer] & 0xFF));
+                    case ',' -> memory[pointer] = (byte) (inputPointer < input.length() ? input.charAt(inputPointer++) : 0);
+                }
+            } else if (instruction instanceof List) {
+                while (memory[pointer] != 0) {
+                    execute((List<Object>) instruction);
+                }
             }
         }
     }
