@@ -40,6 +40,7 @@ public class BrainfuckLexer {
             try {
                 tokens.add(Token.fromChar(c));
             } catch (IllegalArgumentException e) {
+                throw e;
             }
         }
         return tokens;
