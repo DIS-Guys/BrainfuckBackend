@@ -15,7 +15,6 @@ public class RequestController {
         String code = request.getCode();
         String userInput = request.getUserInput();
         BrainfuckController brainfuckController = new BrainfuckController();
-        String output = brainfuckController.processBrainfuck(code, userInput);
-        return output;
+        return brainfuckController.processBrainfuck(code, userInput);
     }
 }
