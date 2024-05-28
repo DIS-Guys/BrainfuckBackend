@@ -35,7 +35,6 @@ public class BrainfuckLexer {
     }
 
     public List<Token> lex(String input) {
-        System.out.println("Lexing");
         List<Token> tokens = new ArrayList<>();
         for (char c : input.toCharArray()) {
             try {

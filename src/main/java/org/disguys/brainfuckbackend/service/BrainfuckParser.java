@@ -20,7 +20,6 @@ public class BrainfuckParser {
     }
 
     public ASTNode parse(List<BrainfuckLexer.Token> tokens) {
-        System.out.println("Parsing");
         ASTNode root = new ASTNode(null); // Root node
         Stack<ASTNode> stack = new Stack<>();
         stack.push(root);
