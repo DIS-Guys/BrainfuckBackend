@@ -19,15 +19,15 @@ public class BrainfuckService {
         return interpreter.run();
     }
 
-        public List<int[]> processDebugInfo(BrainfuckRequest request) {
-            BrainfuckLexer lexer = new BrainfuckLexer(request.getCode());
-            List<Character> tokens = lexer.tokenize();
+    public List<int[]> processDebugInfo(BrainfuckRequest request) {
+        BrainfuckLexer lexer = new BrainfuckLexer(request.getCode());
+        List<Character> tokens = lexer.tokenize();
 
-            BrainfuckParser parser = new BrainfuckParser(tokens);
-            List<Object> ast = parser.parse();
+        BrainfuckParser parser = new BrainfuckParser(tokens);
+        List<Object> ast = parser.parse();
 
-            BrainfuckInterpreter interpreter = new BrainfuckInterpreter(ast, request.getInput());
-            return interpreter.processDebugData();
+        BrainfuckInterpreter interpreter = new BrainfuckInterpreter(ast, request.getInput());
+        return interpreter.processDebugData();
     }
 }
 

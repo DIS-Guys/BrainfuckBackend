@@ -9,13 +9,13 @@ public class BrainfuckInterpreter {
     private final List<Object> ast;
     private final byte[] memory;
     private int pointer;
-    private StringBuilder output;
-    private String input;
+    private final StringBuilder output;
+    private final String input;
     private int inputPointer;
-    private ArrayList<byte[]> listOfMemoryImages = new ArrayList<>();
-    private Stack<Integer> loopOpenings;
+    private final ArrayList<byte[]> listOfMemoryImages = new ArrayList<>();
+    private final Stack<Integer> loopOpenings;
     private int codePointer;
-    private List<int[]> debugData;
+    private final List<int[]> debugData;
 
     public BrainfuckInterpreter(List<Object> ast, String input) {
         this.ast = ast;
@@ -92,5 +92,18 @@ public class BrainfuckInterpreter {
                 debugData.add(new int[]{codePointer, pointer, memory[pointer]});
             }
         }
+    }
+
+    @Override
+    public String toString() {
+            StringBuilder result = new StringBuilder("[\n");
+            for (int i = 0; i < debugData.size(); i++) {
+                result.append(Arrays.toString(debugData.get(i)));
+                if (i < debugData.size() - 1) {
+                    result.append(",\n");
+                }
+            }
+            result.append("\n]");
+            return result.toString();
     }
 }
