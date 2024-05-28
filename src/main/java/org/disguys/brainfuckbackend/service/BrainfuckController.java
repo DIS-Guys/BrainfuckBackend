@@ -10,7 +10,6 @@ public class BrainfuckController {
 
         List<BrainfuckLexer.Token> tokens = lexer.lex(code);
         BrainfuckParser.ASTNode root = parser.parse(tokens);
-        String result = interpreter.interpret(root);
-        return result;
+        return interpreter.interpret(root);
     }
 }

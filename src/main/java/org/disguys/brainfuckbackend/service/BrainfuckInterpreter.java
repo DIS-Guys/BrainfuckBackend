@@ -7,7 +7,6 @@ public class BrainfuckInterpreter {
     private String input;
     private int inputPointer;
     private StringBuilder output;
-    private boolean inloopFlag;
 
     public BrainfuckInterpreter(String input) {
         this.input = input;
