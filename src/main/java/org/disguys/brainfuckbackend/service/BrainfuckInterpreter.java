@@ -16,7 +16,6 @@ public class BrainfuckInterpreter {
     }
 
     public String interpret(BrainfuckParser.ASTNode root) {
-        System.out.println("Intepreting");
         byte[] memory = new byte[MEMORY_SIZE];
         int pointer = 0;
         interpretNode(root, memory, pointer);
@@ -24,7 +23,6 @@ public class BrainfuckInterpreter {
     }
 
     private void interpretNode(BrainfuckParser.ASTNode node, byte[] memory, int pointer) {
-        System.out.println("Intepreting node");
         for (BrainfuckParser.ASTNode child : node.children) {
             switch (child.token) {
                 case INCREMENT_POINTER:
@@ -62,7 +60,6 @@ public class BrainfuckInterpreter {
                     }
                     break;
                 case LOOP_END:
-
                     throw new IllegalStateException("Unmatched closing bracket");
             }
         }
