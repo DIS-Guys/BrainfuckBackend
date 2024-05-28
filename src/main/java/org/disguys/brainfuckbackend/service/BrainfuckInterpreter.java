@@ -35,6 +35,11 @@ public class BrainfuckInterpreter {
         return output.toString();
     }
 
+    public List<int[]> processDebugData() {
+        execute(ast);
+        return debugData;
+    }
+
     private void execute(List<Object> instructions) {
         for (Object instruction : instructions) {
             if (instruction instanceof Character) {
@@ -71,30 +76,21 @@ public class BrainfuckInterpreter {
                         debugData.add(new int[]{codePointer, pointer, memory[pointer]});
                         break;
                 }
-                System.out.println(instruction);
             } else if (instruction instanceof List) {
-                System.out.println(instruction);
                 codePointer++;
                 loopOpenings.push(codePointer);
-                debugData.add(new int[]{codePointer, pointer, memory[pointer]});
                 while (memory[pointer] != 0) {
+                    debugData.add(new int[]{codePointer, pointer, memory[pointer]});
                     execute((List<Object>) instruction);
                     if (memory[pointer] == 0) {
                         break;
                     }
                     codePointer = loopOpenings.peek();
                 }
+                loopOpenings.pop();
                 codePointer++;
                 debugData.add(new int[]{codePointer, pointer, memory[pointer]});
             }
-            System.out.println(codePointer);
-        }
-        // LOGGING (approve pls, now only god and this logger know how this code works)
-        for (int[] array : debugData) {
-            for (int value : array) {
-                System.out.print(value + " ");
-            }
-            System.out.println();
         }
     }
 }
