@@ -1,14 +1,21 @@
 package org.disguys.brainfuckbackend.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 public class BrainfuckInterpreter {
     private final List<Object> ast;
     private final byte[] memory;
     private int pointer;
-    private StringBuilder output;
-    private String input;
+    private final StringBuilder output;
+    private final String input;
     private int inputPointer;
+    private final ArrayList<byte[]> listOfMemoryImages = new ArrayList<>();
+    private final Stack<Integer> loopOpenings;
+    private int codePointer;
+    private final List<int[]> debugData;
 
     public BrainfuckInterpreter(List<Object> ast, String input) {
         this.ast = ast;
@@ -17,6 +24,10 @@ public class BrainfuckInterpreter {
         this.output = new StringBuilder();
         this.input = input;
         this.inputPointer = 0;
+        this.loopOpenings = new Stack<>();
+        this.codePointer = 0;
+        this.debugData = new ArrayList<>();
+        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
     }
 
     public String run() {
@@ -24,23 +35,75 @@ public class BrainfuckInterpreter {
         return output.toString();
     }
 
+    public List<int[]> processDebugData() {
+        execute(ast);
+        return debugData;
+    }
+
     private void execute(List<Object> instructions) {
         for (Object instruction : instructions) {
             if (instruction instanceof Character) {
                 char instr = (char) instruction;
                 switch (instr) {
-                    case '>' -> pointer++;
-                    case '<' -> pointer--;
-                    case '+' -> memory[pointer]++;
-                    case '-' -> memory[pointer]--;
-                    case '.' -> output.append((char) (memory[pointer] & 0xFF));
-                    case ',' -> memory[pointer] = (byte) (inputPointer < input.length() ? input.charAt(inputPointer++) : 0);
+                    case '>':
+                        pointer++;
+                        codePointer++;
+                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        break;
+                    case '<':
+                        pointer--;
+                        codePointer++;
+                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        break;
+                    case '+':
+                        memory[pointer]++;
+                        codePointer++;
+                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        break;
+                    case '-':
+                        memory[pointer]--;
+                        codePointer++;
+                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        break;
+                    case '.':
+                        output.append((char) (memory[pointer] & 0xFF));
+                        codePointer++;
+                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        break;
+                    case ',':
+                        memory[pointer] = (byte) (inputPointer < input.length() ? input.charAt(inputPointer++) : 0);
+                        codePointer++;
+                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        break;
                 }
             } else if (instruction instanceof List) {
+                codePointer++;
+                loopOpenings.push(codePointer);
                 while (memory[pointer] != 0) {
+                    debugData.add(new int[]{codePointer, pointer, memory[pointer]});
                     execute((List<Object>) instruction);
+                    if (memory[pointer] == 0) {
+                        break;
+                    }
+                    codePointer = loopOpenings.peek();
                 }
+                loopOpenings.pop();
+                codePointer++;
+                debugData.add(new int[]{codePointer, pointer, memory[pointer]});
             }
         }
+    }
+
+    @Override
+    public String toString() {
+            StringBuilder result = new StringBuilder("[\n");
+            for (int i = 0; i < debugData.size(); i++) {
+                result.append(Arrays.toString(debugData.get(i)));
+                if (i < debugData.size() - 1) {
+                    result.append(",\n");
+                }
+            }
+            result.append("\n]");
+            return result.toString();
     }
 }

@@ -1,7 +1,7 @@
 package org.disguys.brainfuckbackend.api.dto;
 
 public class BrainfuckResponse {
-    private String output;
+    private final String output;
 
     public BrainfuckResponse(String output) {
         this.output = output;
