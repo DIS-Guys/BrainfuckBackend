@@ -26,7 +26,7 @@ public class BrainfuckController {
     @CrossOrigin(origins = "*")
     @PostMapping("/debug")
     public BrainfuckDebugResponse processDebugInfo(@RequestBody BrainfuckRequest request) {
-        List<int[]> output = brainfuckService.processDebugInfo(request);
-        return new BrainfuckDebugResponse(output);
+        List<int[]> debugInfo = brainfuckService.processDebugInfo(request);
+        return new BrainfuckDebugResponse(debugInfo);
     }
 }

@@ -45,37 +45,15 @@ public class BrainfuckInterpreter {
             if (instruction instanceof Character) {
                 char instr = (char) instruction;
                 switch (instr) {
-                    case '>':
-                        pointer++;
-                        codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
-                        break;
-                    case '<':
-                        pointer--;
-                        codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
-                        break;
-                    case '+':
-                        memory[pointer]++;
-                        codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
-                        break;
-                    case '-':
-                        memory[pointer]--;
-                        codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
-                        break;
-                    case '.':
-                        output.append((char) (memory[pointer] & 0xFF));
-                        codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
-                        break;
-                    case ',':
-                        memory[pointer] = (byte) (inputPointer < input.length() ? input.charAt(inputPointer++) : 0);
-                        codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
-                        break;
+                    case '>' -> pointer++;
+                    case '<' -> pointer--;
+                    case '+' -> memory[pointer]++;
+                    case '-' -> memory[pointer]--;
+                    case '.' -> output.append((char) (memory[pointer] & 0xFF));
+                    case ',' -> memory[pointer] = (byte) (inputPointer < input.length() ? input.charAt(inputPointer++) : 0);
                 }
+                codePointer++;
+                debugData.add(new int[]{codePointer, pointer, memory[pointer]});
             } else if (instruction instanceof List) {
                 codePointer++;
                 loopOpenings.push(codePointer);

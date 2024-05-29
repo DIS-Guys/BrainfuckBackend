@@ -3,13 +3,13 @@ package org.disguys.brainfuckbackend.api.dto;
 import java.util.List;
 
 public class BrainfuckDebugResponse {
-    private final List<int[]> debuginfo;
+    private final List<int[]> debugInfo;
 
     public BrainfuckDebugResponse(List<int[]> debuginfo) {
-        this.debuginfo = debuginfo;
+        this.debugInfo = debuginfo;
     }
 
-    public List<int[]> getOutput() {
-        return debuginfo;
+    public List<int[]> getDebugInfo() {
+        return debugInfo;
     }
 }
