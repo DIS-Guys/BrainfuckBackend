@@ -27,7 +27,7 @@ public class BrainfuckInterpreter {
         this.loopOpenings = new Stack<>();
         this.codePointer = 0;
         this.debugData = new ArrayList<>();
-        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+        debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
     }
 
     public String run() {
@@ -45,20 +45,38 @@ public class BrainfuckInterpreter {
             if (instruction instanceof Character) {
                 char instr = (char) instruction;
                 switch (instr) {
-                    case '>' -> pointer++;
-                    case '<' -> pointer--;
-                    case '+' -> memory[pointer]++;
-                    case '-' -> memory[pointer]--;
-                    case '.' -> output.append((char) (memory[pointer] & 0xFF));
-                    case ',' -> memory[pointer] = (byte) (inputPointer < input.length() ? input.charAt(inputPointer++) : 0);
+                    case '>':
+                        pointer++;
+                        if (pointer > memory.length-1) {
+                            pointer = 0;
+                        }
+                        break;
+                    case '<':
+                        pointer--;
+                        if (pointer < 0) {
+                            pointer = memory.length - 1;
+                        }
+                        break;
+                    case '+':
+                        memory[pointer]++;
+                        break;
+                    case '-':
+                        memory[pointer]--;
+                        break;
+                    case '.':
+                        output.append((char) (memory[pointer] & 0xFF));
+                        break;
+                    case ',':
+                        memory[pointer] = (byte) (inputPointer < input.length() ? input.charAt(inputPointer++) : 0);
+                        break;
                 }
                 codePointer++;
-                debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
             } else if (instruction instanceof List) {
                 codePointer++;
                 loopOpenings.push(codePointer);
                 while (memory[pointer] != 0) {
-                    debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                    debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
                     execute((List<Object>) instruction);
                     if (memory[pointer] == 0) {
                         break;
@@ -67,7 +85,7 @@ public class BrainfuckInterpreter {
                 }
                 loopOpenings.pop();
                 codePointer++;
-                debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
             }
         }
     }
