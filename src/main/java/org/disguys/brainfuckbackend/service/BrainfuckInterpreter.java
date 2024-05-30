@@ -27,7 +27,7 @@ public class BrainfuckInterpreter {
         this.loopOpenings = new Stack<>();
         this.codePointer = 0;
         this.debugData = new ArrayList<>();
-        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+        debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
     }
 
     public String run() {
@@ -51,7 +51,7 @@ public class BrainfuckInterpreter {
                             pointer = 0;
                         }
                         codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
                         break;
                     case '<':
                         pointer--;
@@ -59,34 +59,34 @@ public class BrainfuckInterpreter {
                             pointer = memory.length - 1;
                         }
                         codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
                         break;
                     case '+':
                         memory[pointer]++;
                         codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
                         break;
                     case '-':
                         memory[pointer]--;
                         codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
                         break;
                     case '.':
                         output.append((char) (memory[pointer] & 0xFF));
                         codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
                         break;
                     case ',':
                         memory[pointer] = (byte) (inputPointer < input.length() ? input.charAt(inputPointer++) : 0);
                         codePointer++;
-                        debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                        debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
                         break;
                 }
             } else if (instruction instanceof List) {
                 codePointer++;
                 loopOpenings.push(codePointer);
                 while (memory[pointer] != 0) {
-                    debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                    debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
                     execute((List<Object>) instruction);
                     if (memory[pointer] == 0) {
                         break;
@@ -95,7 +95,7 @@ public class BrainfuckInterpreter {
                 }
                 loopOpenings.pop();
                 codePointer++;
-                debugData.add(new int[]{codePointer, pointer, memory[pointer]});
+                debugData.add(new int[]{codePointer, pointer, Byte.toUnsignedInt(memory[pointer])});
             }
         }
     }
