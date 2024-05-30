@@ -47,11 +47,17 @@ public class BrainfuckInterpreter {
                 switch (instr) {
                     case '>':
                         pointer++;
+                        if (pointer > memory.length-1) {
+                            pointer = 0;
+                        }
                         codePointer++;
                         debugData.add(new int[]{codePointer, pointer, memory[pointer]});
                         break;
                     case '<':
                         pointer--;
+                        if (pointer < 0) {
+                            pointer = memory.length - 1;
+                        }
                         codePointer++;
                         debugData.add(new int[]{codePointer, pointer, memory[pointer]});
                         break;
